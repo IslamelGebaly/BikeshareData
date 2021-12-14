@@ -63,7 +63,20 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
+    df = pd.read_csv(city)
 
+    df["Start Time"] = pd.to_datetime(df["Start Time"], "%Y-%m-%d %H:%M:%S")
+
+    df["Month"] = df["Start Time"].dt.month
+    df["Day_Of_Week"] = df["Start Time"].dt.weekday_name
+
+    months = ["january", "february", "march", "april", "may", "june"]
+    if not (month == "all"):
+        month = months.index(month) + 1
+        df = df[df["Month"] == month]
+    
+    if not (day == "all"):
+        df = df[df["Day_Of_Week"] == day]
 
     return df
 
@@ -75,7 +88,7 @@ def time_stats(df):
     start_time = time.time()
 
     # display the most common month
-
+    
 
     # display the most common day of week
 
