@@ -76,7 +76,7 @@ def load_data(city, month, day):
         df = df[df["Month"] == month]
     
     if not (day == "all"):
-        df = df[df["Day_Of_Week"] == day]
+        df = df[df["Day_Of_Week"] == day.title()]
 
     return df
 
@@ -88,13 +88,19 @@ def time_stats(df):
     start_time = time.time()
 
     # display the most common month
-    
+    months = ["january", "february", "march", "april", "may", "june"]
+    month = int(df["Month"].mode())
+    most_common_month = months[month - 1].title()
+    print("Most common month for borrowing is {}".format(most_common_month))
 
     # display the most common day of week
-
+    day = str(df["Day_Of_Week"].mode())
+    print("Most common day to borrow is {}".format(day))
 
     # display the most common start hour
-
+    df["Hour"] = df["Start Time"].dt.hour
+    most_common_hour = int(df["Hour"].mode())
+    print("Most common hour to borrow is {}\n".format(most_common_hour))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
