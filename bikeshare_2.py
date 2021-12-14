@@ -65,10 +65,10 @@ def load_data(city, month, day):
     """
     df = pd.read_csv(city)
 
-    df["Start Time"] = pd.to_datetime(df["Start Time"], "%Y-%m-%d %H:%M:%S")
+    df["Start Time"] = pd.to_datetime(df["Start Time"], format ="%Y-%m-%d %H:%M:%S")
 
     df["Month"] = df["Start Time"].dt.month
-    df["Day_Of_Week"] = df["Start Time"].dt.weekday_name
+    df["Day_Of_Week"] = df["Start Time"].dt.day_name()
 
     months = ["january", "february", "march", "april", "may", "june"]
     if not (month == "all"):
@@ -94,7 +94,7 @@ def time_stats(df):
     print("Most common month for borrowing is {}".format(most_common_month))
 
     # display the most common day of week
-    day = str(df["Day_Of_Week"].mode())
+    day = df["Day_Of_Week"].mode().values[0]
     print("Most common day to borrow is {}".format(day))
 
     # display the most common start hour
