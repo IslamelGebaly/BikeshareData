@@ -1,6 +1,7 @@
 import time
 import pandas as pd
 import numpy as np
+from pandas._libs.tslibs.timedeltas import Timedelta
 
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
@@ -66,6 +67,7 @@ def load_data(city, month, day):
     df = pd.read_csv(city)
 
     df["Start Time"] = pd.to_datetime(df["Start Time"], format ="%Y-%m-%d %H:%M:%S")
+    df["End Time"] = pd.to_datetime(df["End Time"], format ="%Y-%m-%d %H:%M:%S")
 
     df["Month"] = df["Start Time"].dt.month
     df["Day_Of_Week"] = df["Start Time"].dt.day_name()
@@ -133,12 +135,14 @@ def trip_duration_stats(df):
 
     print('\nCalculating Trip Duration...\n')
     start_time = time.time()
-
+    
+    df["Travel Time"] = (df["End Time"] - df["Start Time"])
+    
     # display total travel time
-
+    print("Total travel time is {} hours".format(pd.DataFrame.sum(df["Travel Time"]) / pd.Timedelta(hours = 1)))
 
     # display mean travel time
-
+    print("Mean travel time is {} minutes".format(pd.DataFrame.mean(df["Travel Time"], axis=0) /pd.Timedelta(minutes = 1)))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
