@@ -28,24 +28,33 @@ def get_filters():
         break
     # get user input for month (all, january, february, ... , june)
     print("")
-    months = ["all", "january", "february", "march", "april", "may", "june"]
+    month = "all"
+    day = "all"
     while True:
-        month = input("Choose which month to filter by (all, january, february, ..., june): ")
-        if month.lower() not in months:
-            print("Month name is invalid. Please enter a valid month (all, january, february, ..., june).\n")
-            continue
-        else:
+        filter = input("Would you like to filter by month, day, both, or none: ")
+        if filter.lower() in ["month", "day", "both", "none"]:
             break
-    print("")
+
+    if filter.lower() != "none":
+        months = ["all", "january", "february", "march", "april", "may", "june"]
+        while filter.lower() == "both" or filter.lower() == "month":
+            month = input("Choose which month to filter by (all, january, february, ..., june): ")
+            if month.lower() not in months:
+                print("Month name is invalid. Please enter a valid month (all, january, february, ..., june).\n")
+                continue
+            else:
+                break
+        print("")
     # get user input for day of week (all, monday, tuesday, ... sunday)
-    days = ["all", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    while True:
-        day = input("Choose which day of the week to filter by (all, monday, tuesday, ... sunday): ")
-        if day.lower() not in days:
-            print("Day name is invalid. Please enter a valid day of the week (all, monday, tuesday, ... sunday).\n")
-            continue
-        else:
-            break
+        days = ["all", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        while filter.lower() == "both" or filter.lower() == "day":
+            day = input("Choose which day of the week to filter by (all, monday, tuesday, ... sunday): ")
+            if day.lower() not in days:
+                print("Day name is invalid. Please enter a valid day of the week (all, monday, tuesday, ... sunday).\n")
+                continue
+            else:
+                break
+    
     print("")
 
 
@@ -139,10 +148,10 @@ def trip_duration_stats(df):
     df["Travel Time"] = (df["End Time"] - df["Start Time"])
     
     # display total travel time
-    print("Total travel time is {} hours".format(pd.DataFrame.sum(df["Travel Time"]) / pd.Timedelta(hours = 1)))
+    print("Total travel time is {} seconds".format(pd.DataFrame.sum(df["Travel Time"]) / pd.Timedelta(seconds = 1)))
 
     # display mean travel time
-    print("Mean travel time is {} minutes".format(pd.DataFrame.mean(df["Travel Time"], axis=0) /pd.Timedelta(minutes = 1)))
+    print("Mean travel time is {} seconds".format(pd.DataFrame.mean(df["Travel Time"], axis=0) /pd.Timedelta(seconds = 1)))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -159,15 +168,22 @@ def user_stats(df):
     print(df["User Type"].value_counts().to_string())
 
     # Display counts of gender
-    print("Number of each Gender:\n")
-    print(df["Gender"].value_counts().to_string())
-    print("\n")
+    try:
+        print("")
+        print("Number of each Gender:\n")
+        print(df["Gender"].value_counts().to_string())
+        print("\n")
+    except:
+        print("There is no gender data.")
 
     # Display earliest, most recent, and most common year of birth
-    print("Oldest user was born in {}".format(int(pd.DataFrame.min(df["Birth Year"]))))
-    print("Youngest user was born in {}".format(int(pd.DataFrame.max(df["Birth Year"]))))
-    print("Most common birth year is {}".format(int(df["Birth Year"].mode().values[0])))
+    try:
+        print("Oldest user was born in {}".format(int(pd.DataFrame.min(df["Birth Year"]))))
+        print("Youngest user was born in {}".format(int(pd.DataFrame.max(df["Birth Year"]))))
+        print("Most common birth year is {}".format(int(df["Birth Year"].mode().values[0])))
 
+    except:
+        print("There are no birth year data.")
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
